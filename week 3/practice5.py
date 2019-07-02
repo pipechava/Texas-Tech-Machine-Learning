@@ -1,6 +1,4 @@
-# Introduction to Artificial Intelligence
-# Random Forest classifier for credit default dataset, part 1
-# By Juan Carlos Rojas
+# Practice 5
 
 import numpy as np
 import pandas as pd
@@ -16,8 +14,9 @@ with open("credit_card_default_dataset.pickle", "rb") as f:
 # Select columns of interest
 cols = train_data.columns
 
-i = 5
+i = 10
 
+# cycle through various n_estimators
 while i <= 200:
     print("For n_estimators = ", i)
     
@@ -47,22 +46,27 @@ while i <= 200:
     #plt.ylabel('True Positive Rate')
     #plt.title('Receiver operating characteristic')
     #plt.show()
-
+    
+    #calculate area under the curve for test data
     auc_score = sklearn.metrics.roc_auc_score(test_labels, Y_pred_proba)
     print("\tTest AUC score: {:.3f}".format(auc_score))
     
     # Predict new labels for training data
     Y_pred_proba_training = model.predict_proba(train_data[cols])[::,1]
-    auc_score_training = sklearn.metrics.roc_auc_score(\
-        train_labels, Y_pred_proba_training)
+    
+    #calculate area under the curve for train data
+    auc_score_training = sklearn.metrics.roc_auc_score(train_labels, Y_pred_proba_training)
     print("\tTraining AUC score: {:.3f}".format(auc_score_training))
     
-    i = i + 20
+    i = i + 10
     
-i = 100
+i = 5
 
-while i <= 500:
+# cycle through various leaf sizes
+while i <= 35:
     print("Leaf size = ", i)
+    
+    # Create and train a Decision Tree classifier
     model = sklearn.ensemble.RandomForestClassifier(n_estimators=100,min_samples_leaf=i)
 
     # Train it with the training data and labels
@@ -87,18 +91,21 @@ while i <= 500:
     #plt.ylabel('True Positive Rate')
     #plt.title('Receiver operating characteristic')
     #plt.show()
-
+    
+    # calculate the area under the curve for test data
     auc_score = sklearn.metrics.roc_auc_score(test_labels, Y_pred_proba)
     print("\tTest AUC score: {:.3f}".format(auc_score))
     
     # Predict new labels for training data
     Y_pred_proba_training = model.predict_proba(train_data[cols])[::,1]
-    auc_score_training = sklearn.metrics.roc_auc_score(\
-        train_labels, Y_pred_proba_training)
+    
+    # calculate the area under the curve for train data
+    auc_score_training = sklearn.metrics.roc_auc_score(train_labels, Y_pred_proba_training)
     print("\tTraining AUC score: {:.3f}".format(auc_score_training))
     
-    i = i + 50
+    i = i + 5
 
+# Create and train a Decision Tree classifier with optimal n_estimator and leaf size
 model = sklearn.ensemble.RandomForestClassifier(n_estimators=100,min_samples_leaf=20)
 
 # Train it with the training data and labels
@@ -108,26 +115,29 @@ model.fit(train_data[cols], train_labels)
 Y_pred_proba = model.predict_proba(test_data[cols])[::,1]
     
 # Compute a precision & recall graph
-#precisions, recalls, thresholds = sklearn.metrics.precision_recall_curve(test_labels, Y_pred_proba)
-#plt.plot(thresholds, precisions[:-1], "b--", label="Precision")
-#plt.plot(thresholds, recalls[:-1], "g-", label="Recall")
-#plt.legend(loc="center left")
-#plt.xlabel("Threshold")
-#plt.show()
+precisions, recalls, thresholds = sklearn.metrics.precision_recall_curve(test_labels, Y_pred_proba)
+plt.plot(thresholds, precisions[:-1], "b--", label="Precision")
+plt.plot(thresholds, recalls[:-1], "g-", label="Recall")
+plt.legend(loc="center left")
+plt.xlabel("Threshold")
+plt.show()
     
 # Plot a ROC curve (Receiver Operating Characteristic)
 # Compares true positive rate with false positive rate
-#fpr, tpr, _ = sklearn.metrics.roc_curve(test_labels, Y_pred_proba)
-#plt.plot(fpr,tpr)
-#plt.xlabel('False Positive Rate')
-#plt.ylabel('True Positive Rate')
-#plt.title('Receiver operating characteristic')
-#plt.show()
+fpr, tpr, _ = sklearn.metrics.roc_curve(test_labels, Y_pred_proba)
+plt.plot(fpr,tpr)
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver operating characteristic')
+plt.show()
 
+# calculate the area under the curve for test data
 auc_score = sklearn.metrics.roc_auc_score(test_labels, Y_pred_proba)
 print("\tTest AUC score: {:.3f}".format(auc_score))
     
 # Predict new labels for training data
 Y_pred_proba_training = model.predict_proba(train_data[cols])[::,1]
+
+# calculate the area under the curve for train data
 auc_score_training = sklearn.metrics.roc_auc_score(train_labels, Y_pred_proba_training)
 print("\tTraining AUC score: {:.3f}".format(auc_score_training))

@@ -36,6 +36,7 @@ for i in features2:
 # Predict new labels for test data
 Y_pred_proba = model.predict(test_data[cols])
 
+# print the first 20 predictions
 print("Predictions:")
 for idx in range(20):
     print("\tPredicted: {:.3f}\t Correct: {:6d}"\
@@ -44,6 +45,7 @@ for idx in range(20):
 # Binarize the predictions by comparing to a threshold
 threshold = [0.35, 0.30, 0.25, 0.20, 0.15, 0.10]
 
+# cycle through various threshold values
 for i in threshold:
     print("Threshold: ", i)
     Y_pred = (Y_pred_proba > i).astype(np.int_)

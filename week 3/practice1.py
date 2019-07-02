@@ -36,6 +36,7 @@ for i in features2:
 # Predict new labels for test data
 Y_pred_proba = model.predict(test_data[cols])
 
+# print each prediction
 print("Predictions:")
 for idx in range(20):
     print("\tPredicted: {:.3f}\t Correct: {:6d}"\

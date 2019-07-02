@@ -31,6 +31,7 @@ print("Coeffs: ", model.coef_)
 # Get the prediction probabilities
 Y_pred_proba = model.predict_proba(test_data[cols])[::,1]
 
+# print first 20 predictions
 print("Predictions:")
 for idx in range(20):
     print("\tPredicted: {:.3f}\t Correct: {:6d}"\
@@ -39,6 +40,7 @@ for idx in range(20):
 # Binarize the predictions by comparing to a threshold
 threshold = [0.35, 0.30, 0.25, 0.20, 0.15, 0.10]
 
+# cycle through various threshold values
 for i in threshold:
     print("Threshold: ", i)
     Y_pred = (Y_pred_proba > i).astype(np.int_)
@@ -60,14 +62,14 @@ for i in threshold:
     recall = sklearn.metrics.recall_score(test_labels, Y_pred)
     print("\tRecall: {:.3f}".format(recall))
 
-
-### CORTARLA A 0.4!!!!!!!!!!!!!!
 # Compute a precision & recall graph
 precisions, recalls, thresholds = sklearn.metrics.precision_recall_curve(test_labels, Y_pred_proba)
 plt.plot(thresholds, precisions[:-1], "b--", label="Precision")
 plt.plot(thresholds, recalls[:-1], "g-", label="Recall")
 plt.legend(loc="center left")
 plt.xlabel("Threshold")
+# cut x range to 0.4 (from 0.0 to 0.4)
+plt.xlim((0.0,0.4))
 plt.show()
 
 # Plot a ROC curve (Receiver Operating Characteristic)

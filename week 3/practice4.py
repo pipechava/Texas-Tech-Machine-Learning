@@ -16,11 +16,12 @@ cols = train_data.columns
 
 i = 200
 
+# cycle through various leaf sizes
 while i<=450:
     print("forleaf size = ",i)
     
     # Create and train a Decision Tree classifier
-#model = sklearn.tree.DecisionTreeClassifier()
+    #model = sklearn.tree.DecisionTreeClassifier()
     model = sklearn.tree.DecisionTreeClassifier(min_samples_leaf=i)
     
     # Train it with the training data and labels
@@ -46,13 +47,14 @@ while i<=450:
     #plt.title('Receiver operating characteristic')
     #plt.show()
     
+    # calculate the area under the curve for test data
     auc_score = sklearn.metrics.roc_auc_score(test_labels, Y_pred_proba)
     print("\tAUC score: {:.3f}".format(auc_score))
     
     # Predict new labels for training data
     Y_pred_proba_training = model.predict_proba(train_data[cols])[::,1]
-    auc_score_training = sklearn.metrics.roc_auc_score(\
-        train_labels, Y_pred_proba_training)
+    # calculate the area under the curve for training data
+    auc_score_training = sklearn.metrics.roc_auc_score(train_labels, Y_pred_proba_training)
     print("\tTraining AUC score: {:.3f}".format(auc_score_training))
     
     i = i+10
